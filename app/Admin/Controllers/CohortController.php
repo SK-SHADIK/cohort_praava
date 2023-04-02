@@ -36,11 +36,9 @@ class CohortController extends AdminController
         $grid->column('send_email', __('Send_Email'))->display(function ($value) {
             return $value ? '<span style="color: green; font-weight:900;">Active</span>' : '<span style="color: red; font-weight:900;">Not Active</span>';
         });
-        $grid->column('email_body', __('Email_Body'));
         $grid->column('send_text', __('Send_Text'))->display(function ($value) {
             return $value ? '<span style="color: green; font-weight:900;">Active</span>' : '<span style="color: red; font-weight:900;">Not Active</span>';
         });
-        $grid->column('text_body', __('Text_Body'));
         $grid->databasefk()->name('Database_Name');
         $grid->column('cd', __('Cd'));
 
@@ -65,9 +63,7 @@ class CohortController extends AdminController
         $show->field('query', __('Query'));
         $show->field('is_active', __('Is active'));
         $show->field('send_email', __('Send email'));
-        $show->field('email_body', __('Email body'));
         $show->field('send_text', __('Send text'));
-        $show->field('text_body', __('Text body'));
         $show->field('database_id', __('Database id'));
         $show->field('cb', __('Cb'));
         $show->field('cd', __('Cd'));
@@ -91,16 +87,11 @@ class CohortController extends AdminController
         $form->text('query', __('Query'));
         $form->switch('is_active', __('Is active'))->default(1);
         $form->switch('send_email', __('Send email'))->default(1);
-        $form->textarea('email_body', __('Email body'));
         $form->switch('send_text', __('Send text'))->default(1);
-        $form->textarea('text_body', __('Text body'));
         $databases = \App\Models\Database::pluck('name', 'id')->toArray();
         $form->select('database_id', __('Database_Name'))->options($databases);
         $form->text('cb', __('Cb'))->readonly()->value(auth()->user()->name);
         $form->text('ub', __('Ub'))->readonly()->value(auth()->user()->name);
-
-
-        $form->html(view('CohortJS')->render());
 
         return $form;
     }

@@ -9,6 +9,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Support\Str;
 
+
 class CampaignController extends AdminController
 {
     /**
@@ -31,27 +32,11 @@ class CampaignController extends AdminController
         $grid->column('campaign_name', __('Campaign_Name'));
         $grid->column('campaign_date', __('Campaign_Date'));
         $grid->cohortfk()->name('Cohort_Name');
+        $grid->column('email_body', __('Email_Body'));
+        $grid->column('text_body', __('Text_Tody'));
+        $grid->column('cd', __('Cd'));
 
         $grid->model()->orderBy('id', 'desc');
-
-        $grid->column('email_body', __('Email_Body'))->display(function () {
-            $cohort = $this->cohortfk;
-    
-            $emailBody = $cohort->email_body;
-
-            // return $emailBody;
-    
-            return nl2br(e($emailBody));
-        });
-        $grid->column('text_body', __('Text_Body'))->display(function () {
-            $cohort = $this->cohortfk;
-    
-            $textBody = $cohort->text_body;
-    
-            return $textBody;
-        });
-
-        $grid->column('cd', __('Cd'));
 
 
         return $grid;
@@ -71,9 +56,9 @@ class CampaignController extends AdminController
         $show->field('campaign_id', __('Campaign id'));
         $show->field('campaign_name', __('Campaign name'));
         $show->field('campaign_date', __('Campaign date'));
-        $show->cohortfk('Cohort_Name')->as(function ($content){
-            return $content->name;
-        });
+        $show->field('cohort_id', __('Cohort id'));
+        $show->field('email_body', __('Email body'));
+        $show->field('text_body', __('Text body'));
         $show->field('cb', __('Cb'));
         $show->field('cd', __('Cd'));
         $show->field('ub', __('Ub'));
@@ -97,29 +82,10 @@ class CampaignController extends AdminController
         $form->datetime('campaign_date', __('Campaign date'))->default(date('Y-m-d H:i:s'));
         $cohorts = \App\Models\Cohort::where('is_active', true)->pluck('name', 'id')->toArray();
         $form->select('cohort_id', __('Cohort_Name'))->options($cohorts);
+        $form->textarea('email_body', __('Email body'));
+        $form->textarea('text_body', __('Text body'));
         $form->text('cb', __('Cb'))->readonly()->value(auth()->user()->name);
         $form->text('ub', __('Ub'))->readonly()->value(auth()->user()->name);
-
-        
-
-// $form->textarea('text_body', __('Text_Body'));
-
-// // Add JavaScript code to update the text_body field
-// $form->html('<script>
-//               $(document).ready(function() {
-//                   var cohortIdField = $("#cohort_id");
-//                   var textBodyField = $("#text_body");
-
-//                   cohortIdField.change(function() {
-//                       var cohortId = $(this).val();
-
-//                       $.get("/cohorts/" + cohortId + "/text_body", function (data) {
-//                           textBodyField.val(data);
-//                       });
-//                   });
-//               });
-//             </script>');
-
 
         
 

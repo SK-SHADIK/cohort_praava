@@ -19,6 +19,8 @@ class CreateCampaignTable extends Migration
             $table->string('campaign_name', 255);
             $table->timestamp('campaign_date');
             $table->unsignedBigInteger('cohort_id');
+            $table->string('email_body', 255)->nullable();
+            $table->string('text_body', 255)->nullable();
             $table->string('cb', 255)->nullable();
             $table->timestamp('cd')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('ub', 255)->nullable();
