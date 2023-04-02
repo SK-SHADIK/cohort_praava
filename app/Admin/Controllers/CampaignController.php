@@ -30,8 +30,29 @@ class CampaignController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('campaign_name', __('Campaign_Name'));
         $grid->column('campaign_date', __('Campaign_Date'));
-        $grid->cohortfk()->name('Cohort');
+        $grid->cohortfk()->name('Cohort_Name');
+
+        $grid->model()->orderBy('id', 'desc');
+
+        $grid->column('email_body', __('Email_Body'))->display(function () {
+            $cohort = $this->cohortfk;
+    
+            $emailBody = $cohort->email_body;
+
+            // return $emailBody;
+    
+            return nl2br(e($emailBody));
+        });
+        $grid->column('text_body', __('Text_Body'))->display(function () {
+            $cohort = $this->cohortfk;
+    
+            $textBody = $cohort->text_body;
+    
+            return $textBody;
+        });
+
         $grid->column('cd', __('Cd'));
+
 
         return $grid;
     }
@@ -75,9 +96,32 @@ class CampaignController extends AdminController
         $form->text('campaign_name', __('Campaign name'));
         $form->datetime('campaign_date', __('Campaign date'))->default(date('Y-m-d H:i:s'));
         $cohorts = \App\Models\Cohort::where('is_active', true)->pluck('name', 'id')->toArray();
-        $form->select('cohort_id', __('Cohort_Name'))->options($cohorts);
+        $form->select('cohort_id', __('Cohort_Name'))->options($cohorts);        
         $form->text('cb', __('Cb'))->readonly()->value(auth()->user()->name);
         $form->text('ub', __('Ub'))->readonly()->value(auth()->user()->name);
+
+        
+
+// $form->textarea('text_body', __('Text_Body'));
+
+// // Add JavaScript code to update the text_body field
+// $form->html('<script>
+//               $(document).ready(function() {
+//                   var cohortIdField = $("#cohort_id");
+//                   var textBodyField = $("#text_body");
+
+//                   cohortIdField.change(function() {
+//                       var cohortId = $(this).val();
+
+//                       $.get("/cohorts/" + cohortId + "/text_body", function (data) {
+//                           textBodyField.val(data);
+//                       });
+//                   });
+//               });
+//             </script>');
+
+
+        
 
         return $form;
     }

@@ -15,4 +15,8 @@ class Campaign extends Model
     {
         return $this->hasOne(Cohort::class, 'id', 'cohort_id');
     }
+    public function cohortfkemailbody()
+    {
+        return $this->hasOne(Cohort::class, 'id', 'email_body');
+    }
 }
