@@ -12,6 +12,10 @@ $(document).ready(function() {
             $('textarea[name="email_body"]').removeAttr('required');
         }
     });
+    if (!$('.send_email').is(':checked')) {
+        $('textarea[name="email_body"]').hide();
+        $('label[for="email_body"]').hide();
+    }
 });
 $(document).ready(function() {
     $('textarea[name="text_body"]').attr('required', true);
@@ -26,21 +30,10 @@ $(document).ready(function() {
             $('textarea[name="text_body"]').removeAttr('required');
         }
     });
+    if (!$('.send_text').is(':checked')) {
+        $('textarea[name="text_body"]').hide();
+        $('label[for="text_body"]').hide();
+    }
 });
-// $(document).ready(function() {
-//     if (!$('input[name="send_text"]').is(':checked')) {
-//         $('textarea[name="text_body"]').show();
-//     }
-//     $('.send_text').change(function() {
-//         if ($('.send_text').is(':checked')) {
-//             $('textarea[name="text_body"]').show();
-//             $('label[for="text_body"]').show();
-//         } else {
-//             $('textarea[name="text_body"]').hide();
-//             $('label[for="text_body"]').hide();
-
-//         }
-//     });
-// });
 
 </script>
