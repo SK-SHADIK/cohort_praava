@@ -82,13 +82,15 @@ class CampaignController extends AdminController
         $form->datetime('campaign_date', __('Campaign date'))->default(date('Y-m-d H:i:s'));
         $cohorts = \App\Models\Cohort::where('is_active', true)->pluck('name', 'id')->toArray();
         $form->select('cohort_id', __('Cohort_Name'))->options($cohorts);
+
         $form->textarea('email_body', __('Email body'));
         $form->textarea('text_body', __('Text body'));
         $form->text('cb', __('Cb'))->readonly()->value(auth()->user()->name);
         $form->text('ub', __('Ub'))->readonly()->value(auth()->user()->name);
+        
+        $form->html(view('CohortJS')->render());
 
         
-
         return $form;
     }
 }
