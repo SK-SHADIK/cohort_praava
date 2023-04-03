@@ -91,6 +91,7 @@ class CampaignController extends AdminController
         $form->html(view('CohortJS')->render());
 
         
+        
         return $form;
     }
 }

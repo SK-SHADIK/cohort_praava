@@ -1,4 +1,8 @@
 <script>
+    $('textarea[name="email_body"]').hide();
+    $('label[for="email_body"]').hide();
+    $('textarea[name="text_body"]').hide();
+    $('label[for="text_body"]').hide();
 $(document).ready(function() {
     $('textarea[name="email_body"]').hide();
     $('label[for="email_body"]').hide();
@@ -9,8 +13,8 @@ $(document).ready(function() {
     $('textarea[name="text_body"]').attr('required', true);
     
     function toggleEmailBody() {
-        var cohortId = $('select[name="cohort_id"]').val();
-        var sendEmail = cohorts[cohortId].send_email;
+        let cohortId = $('select[name="cohort_id"]').val();
+        let sendEmail = cohorts[cohortId].send_email;
         
         if (sendEmail) {
             $('textarea[name="email_body"]').show();
@@ -24,8 +28,8 @@ $(document).ready(function() {
     }
     
     function toggleTextBody() {
-        var cohortId = $('select[name="cohort_id"]').val();
-        var sendText = cohorts[cohortId].send_text;
+        let cohortId = $('select[name="cohort_id"]').val();
+        let sendText = cohorts[cohortId].send_text;
         
         if (sendText) {
             $('textarea[name="text_body"]').show();
@@ -38,12 +42,12 @@ $(document).ready(function() {
         }
     }
     
-    var cohorts = {!! json_encode(\App\Models\Cohort::where('is_active', true)->get(['id', 'name', 'send_email', 'send_text'])) !!}.reduce(function(map, obj) {
+    let cohorts = {!! json_encode(\App\Models\Cohort::where('is_active', true)->get(['id', 'name', 'send_email', 'send_text'])) !!}.reduce(function(map, obj) {
         map[obj.id] = {name: obj.name, send_email: obj.send_email, send_text: obj.send_text};
         return map;
     }, {});
     
-    var options = Object.keys(cohorts).map(function(id) {
+    let options = Object.keys(cohorts).map(function(id) {
         return {id: id, text: cohorts[id].name};
     });
     
