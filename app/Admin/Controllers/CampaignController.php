@@ -56,7 +56,9 @@ class CampaignController extends AdminController
         $show->field('campaign_id', __('Campaign id'));
         $show->field('campaign_name', __('Campaign name'));
         $show->field('campaign_date', __('Campaign date'));
-        $show->field('cohort_id', __('Cohort id'));
+        $show->cohortfk('Cohort_Name')->as(function ($content){
+            return $content->name;
+        });
         $show->field('email_body', __('Email body'));
         $show->field('text_body', __('Text body'));
         $show->field('cb', __('Cb'));
