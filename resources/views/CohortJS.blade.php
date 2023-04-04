@@ -1,12 +1,13 @@
 <script>
-
-$('textarea[name="email_body"]').hide();
-$('label[for="email_body"]').hide();
-$('textarea[name="text_body"]').hide();
-$('label[for="text_body"]').hide();
-
 $(document).ready(function() {
-    
+    $('textarea[name="email_body"]').show();
+    $('label[for="email_body"]').show();
+    $('textarea[name="text_body"]').show();
+    $('label[for="text_body"]').show();
+    $('textarea[name="email_body"]').hide();
+    $('label[for="email_body"]').hide();
+    $('textarea[name="text_body"]').hide();
+    $('label[for="text_body"]').hide();
 
     $('select[name="cohort_id"]').change(function() {
         let cohortId = $(this).val();
@@ -17,7 +18,6 @@ $(document).ready(function() {
             success: function(response) {
                 let sendEmail = response['send_email'];
                 let sendText = response['send_text'];
-                
                 
                 if (sendEmail == true) {
                     $('textarea[name="email_body"]').show();
@@ -42,6 +42,4 @@ $(document).ready(function() {
         });
     });
 });
-
-
 </script>
