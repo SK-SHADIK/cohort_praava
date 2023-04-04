@@ -16,7 +16,10 @@ class CohortController extends AdminController
      * @var string
      */
     protected $title = 'Cohort';
-
+    public function getcohort($id){
+        $cohort = Cohort::find($id);
+    return $cohort;
+    }
     /**
      * Make a grid builder.
      *

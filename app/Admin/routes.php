@@ -16,6 +16,7 @@ Route::group([
 
     Route::resource('database', DatabaseController::class);
     Route::resource('cohort', CohortController::class);
+    Route::get('cohortid/{id}', 'CohortController@getcohort');
     Route::resource('campaign', CampaignController::class);
 
 });
