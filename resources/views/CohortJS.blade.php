@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 $(document).ready(function() {
     $('textarea[name="email_body"]').show();
     $('label[for="email_body"]').show();
@@ -42,4 +42,4 @@ $(document).ready(function() {
         });
     });
 });
-</script>
+</script> -->

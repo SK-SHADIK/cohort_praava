@@ -8,6 +8,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 
 class CampaignController extends AdminController
@@ -77,20 +78,47 @@ class CampaignController extends AdminController
     protected function form()
     {
         $form = new Form(new Campaign());
-        $form->html(view('CohortJS'));
+        // $form->html(view('CohortJS'));
 
         $campaignId = Str::uuid();
         $form->text('campaign_id', __('Campaign id'))->readonly()->default($campaignId);
-        $form->text('campaign_name', __('Campaign name'));
-        $form->datetime('campaign_date', __('Campaign date'))->default(date('Y-m-d H:i:s'));
-        $cohorts = \App\Models\Cohort::where('is_active', true)->pluck('name', 'id')->toArray();
-        $form->select('cohort_id', __('Cohort_Name'))->options($cohorts);
-        $form->textarea('email_body', __('Email body'));
-        $form->textarea('text_body', __('Text body'));
+        $form->text('campaign_name', __('Campaign name'))->rules('required');
+        $form->datetime('campaign_date', __('Campaign date'))->default(date('Y-m-d H:i:s'))->rules('required');
+        $cohorts = \App\Models\Cohort::where('is_active', true)->get();
+        $options = [];
+        $sendEmailfalg=[];
+        $sendTextfalg=[];
+        foreach ($cohorts as $cohort) {
+            $options[$cohort->id.'|'.$cohort->send_email.'|'.$cohort->send_text] = $cohort->name;
+            if($cohort->send_email){
+                $sendEmailfalg[]=$cohort->id.'|'.$cohort->send_email.'|'.$cohort->send_text;
+            }
+            if($cohort->send_text){
+                $sendTextfalg[]=$cohort->id.'|'.$cohort->send_email.'|'.$cohort->send_text;
+            }
+          
+        }
+        // dd($sendEmail);
+        $form->select('cohort_id', __('Cohort_Name'))->options($options)->when('in', $sendEmailfalg, function (Form $form) {
+    
+                $form->textarea('email_body', __('Email body'))->rules('required');
+        
+            })->rules('required')->when('in', $sendTextfalg, function (Form $form) {
+    
+                $form->textarea('text_body', __('Text body'))->rules('required');
+        
+            });
+        
         $form->text('cb', __('Cb'))->readonly()->value(auth()->user()->name);
         $form->text('ub', __('Ub'))->readonly()->value(auth()->user()->name);
+
+
+
         
-      
+      $form->saving(function (Form $form){
+        $result=explode('|',$form->cohort_id);
+        $form->cohort_id=$result[0]??'';
+      });
 
         
         

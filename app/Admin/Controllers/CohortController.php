@@ -16,9 +16,11 @@ class CohortController extends AdminController
      * @var string
      */
     protected $title = 'Cohort';
-    public function getcohort($id){
-        $cohort = Cohort::find($id);
-    return $cohort;
+    public function getcohort(Request $request)
+    {
+        $provinceId = $request->get('q');
+    
+        return cohort::getcohort()->where('id', $provinceId)->get(['id', DB::raw('name as text')]);
     }
     /**
      * Make a grid builder.
@@ -87,14 +89,14 @@ class CohortController extends AdminController
     {
         $form = new Form(new Cohort());
 
-        $form->text('name', __('Name'));
+        $form->text('name', __('Name'))->rules('required');
         $form->textarea('description', __('Description'));
-        $form->text('query', __('Query'));
+        $form->text('query', __('Query'))->rules('required');
         $form->switch('is_active', __('Is active'))->default(1);
         $form->switch('send_email', __('Send email'))->default(1);
         $form->switch('send_text', __('Send text'))->default(1);
         $databases = \App\Models\Database::pluck('name', 'id')->toArray();
-        $form->select('database_id', __('Database_Name'))->options($databases);
+        $form->select('database_id', __('Database_Name'))->options($databases)->rules('required');
         $form->text('cb', __('Cb'))->readonly()->value(auth()->user()->name);
         $form->text('ub', __('Ub'))->readonly()->value(auth()->user()->name);
 
