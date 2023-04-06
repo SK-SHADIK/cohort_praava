@@ -69,7 +69,7 @@ class CohortController extends AdminController
         $show->field('is_active', __('Is active'));
         $show->field('send_email', __('Send email'));
         $show->field('send_text', __('Send text'));
-        $show->databasefk('Database_Name')->as(function ($content){
+        $show->databasefk('Database_Name')->as(function ($content) {
             return $content->name;
         });
         $show->field('cb', __('Cb'));

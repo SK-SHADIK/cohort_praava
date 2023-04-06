@@ -57,7 +57,7 @@ class CampaignController extends AdminController
         $show->field('campaign_id', __('Campaign id'));
         $show->field('campaign_name', __('Campaign name'));
         $show->field('campaign_date', __('Campaign date'));
-        $show->cohortfk('Cohort_Name')->as(function ($content){
+        $show->cohortfk('Cohort_Name')->as(function ($content) {
             return $content->name;
         });
         $show->field('email_body', __('Email body'));
@@ -89,39 +89,36 @@ class CampaignController extends AdminController
         $sendEmailfalg=[];
         $sendTextfalg=[];
         foreach ($cohorts as $cohort) {
-            $options[$cohort->id.'|'.$cohort->send_email.'|'.$cohort->send_text] = $cohort->name;
-            if($cohort->send_email){
-                $sendEmailfalg[]=$cohort->id.'|'.$cohort->send_email.'|'.$cohort->send_text;
+            $options[$cohort->id] = $cohort->name;
+            if ($cohort->send_email) {
+                $sendEmailfalg[]=$cohort->id;
             }
-            if($cohort->send_text){
-                $sendTextfalg[]=$cohort->id.'|'.$cohort->send_email.'|'.$cohort->send_text;
+            if ($cohort->send_text) {
+                $sendTextfalg[]=$cohort->id;
             }
-          
         }
-        // dd($sendEmail);
-        $form->select('cohort_id', __('Cohort_Name'))->options($options)->when('in', $sendEmailfalg, function (Form $form) {
-    
+        
+        $form->select('cohort_id', __('Cohort_Name'))->options($options)
+        ->when('in', $sendEmailfalg, function (Form $form) {
+        
                 $form->textarea('email_body', __('Email body'))->rules('required');
+            
+            })->when('in', $sendTextfalg, function (Form $form) {
         
-            })->rules('required')->when('in', $sendTextfalg, function (Form $form) {
-    
                 $form->textarea('text_body', __('Text body'))->rules('required');
+            
+            })->rules('required');
         
-            });
         
         $form->text('cb', __('Cb'))->readonly()->value(auth()->user()->name);
         $form->text('ub', __('Ub'))->readonly()->value(auth()->user()->name);
-
-
-
-        
-      $form->saving(function (Form $form){
-        $result=explode('|',$form->cohort_id);
-        $form->cohort_id=$result[0]??'';
-      });
-
         
         
+        
+        $form->saving(function (Form $form) {
+            $form->cohort_id = explode('|', $form->cohort_id)[0] ?? '';
+        });
+                
         return $form;
     }
 }
