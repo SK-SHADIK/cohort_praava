@@ -78,7 +78,7 @@ class CampaignController extends AdminController
     protected function form()
     {
         $form = new Form(new Campaign());
-        
+
         $campaignId = Str::uuid();
         $form->text('campaign_id', __('Campaign id'))->readonly()->default($campaignId);
         $form->text('campaign_name', __('Campaign name'))->rules('required');
@@ -113,10 +113,6 @@ class CampaignController extends AdminController
         $form->text('ub', __('Ub'))->readonly()->value(auth()->user()->name);
         
         
-        
-        $form->saving(function (Form $form) {
-            $form->cohort_id = explode('|', $form->cohort_id)[0] ?? '';
-        });
                 
         return $form;
     }
