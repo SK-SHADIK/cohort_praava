@@ -16,12 +16,7 @@ class CohortController extends AdminController
      * @var string
      */
     protected $title = 'Cohort';
-    public function getcohort(Request $request)
-    {
-        $provinceId = $request->get('q');
     
-        return cohort::getcohort()->where('id', $provinceId)->get(['id', DB::raw('name as text')]);
-    }
     /**
      * Make a grid builder.
      *
