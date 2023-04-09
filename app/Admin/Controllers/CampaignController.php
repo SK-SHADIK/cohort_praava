@@ -78,8 +78,7 @@ class CampaignController extends AdminController
     protected function form()
     {
         $form = new Form(new Campaign());
-        // $form->html(view('CohortJS'));
-
+        
         $campaignId = Str::uuid();
         $form->text('campaign_id', __('Campaign id'))->readonly()->default($campaignId);
         $form->text('campaign_name', __('Campaign name'))->rules('required');
