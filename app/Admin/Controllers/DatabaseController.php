@@ -69,8 +69,8 @@ class DatabaseController extends AdminController
         $form = new Form(new Database());
 
         $form->text('name', __('Name'))->rules('required');
-        $form->text('cb', __('Cb'))->readonly()->value(auth()->user()->name);
-        $form->text('ub', __('Ub'))->readonly()->value(auth()->user()->name);
+        $form->hidden('cb', __('Cb'))->value(auth()->user()->name);
+        $form->hidden('ub', __('Ub'))->value(auth()->user()->name);
 
         return $form;
     }

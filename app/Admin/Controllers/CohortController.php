@@ -96,8 +96,8 @@ class CohortController extends AdminController
         $form->switch('send_text', __('Send_Text'))->default(1);
         $databases = \App\Models\Database::pluck('name', 'id')->toArray();
         $form->select('database_id', __('Database_Name'))->options($databases)->rules('required');
-        $form->text('cb', __('Cb'))->readonly()->value(auth()->user()->name);
-        $form->text('ub', __('Ub'))->readonly()->value(auth()->user()->name);
+        $form->hidden('cb', __('Cb'))->value(auth()->user()->name);
+        $form->hidden('ub', __('Ub'))->value(auth()->user()->name);
 
         return $form;
     }

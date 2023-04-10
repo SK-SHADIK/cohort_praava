@@ -37,7 +37,6 @@ class CampaignController extends AdminController
         $grid->column('text_body', __('Text_Tody'));
         $grid->column('cd', __('Cd'));
 
-
         $grid->model()->orderBy('id', 'desc');
 
         $grid->filter(function ($filter) {
@@ -47,7 +46,6 @@ class CampaignController extends AdminController
         $grid->filter(function ($filter) {
             $filter->like('campaign_date', __('Campaign_Date_Time'));
         });
-
 
         return $grid;
     }
@@ -94,35 +92,31 @@ class CampaignController extends AdminController
         $form->datetime('campaign_date', __('Campaign_Date_Time'))->default(date('Y-m-d H:i:s'))->rules('required');
         $cohorts = \App\Models\Cohort::where('is_active', true)->get();
         $options = [];
-        $sendEmailfalg=[];
-        $sendTextfalg=[];
+        $sendEmailflag = [];
+        $sendTextflag = [];
         foreach ($cohorts as $cohort) {
             $options[$cohort->id] = $cohort->name;
             if ($cohort->send_email) {
-                $sendEmailfalg[]=$cohort->id;
+                $sendEmailflag[] = $cohort->id;
             }
             if ($cohort->send_text) {
-                $sendTextfalg[]=$cohort->id;
+                $sendTextflag[] = $cohort->id;
             }
         }
-        
         $form->select('cohort_id', __('Cohort_Name'))->options($options)
-        ->when('in', $sendEmailfalg, function (Form $form) {
+        ->when('in', $sendEmailflag, function (Form $form) {
         
                 $form->textarea('email_body', __('Email_Body'))->rules('required');
             
-            })->when('in', $sendTextfalg, function (Form $form) {
+        })->when('in', $sendTextflag, function (Form $form) {
+    
+            $form->textarea('text_body', __('Text_Body'))->rules('required');
         
-                $form->textarea('text_body', __('Text_Body'))->rules('required');
-            
-            })->rules('required');
-        
-        
-        $form->text('cb', __('Cb'))->readonly()->value(auth()->user()->name);
-        $form->text('ub', __('Ub'))->readonly()->value(auth()->user()->name);
-        
-        
-                
+        })->rules('required');
+         
+        $form->hidden('cb', __('Cb'))->value(auth()->user()->name);
+        $form->hidden('ub', __('Ub'))->value(auth()->user()->name);
+              
         return $form;
     }
 }
