@@ -44,6 +44,10 @@ class CohortController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
 
+        $grid->filter(function ($filter) {
+            $filter->like('name', __('Cohort_Name'));
+        });
+
         return $grid;
     }
 
@@ -61,9 +65,9 @@ class CohortController extends AdminController
         $show->field('name', __('Name'));
         $show->field('description', __('Description'));
         $show->field('query', __('Query'));
-        $show->field('is_active', __('Is active'));
-        $show->field('send_email', __('Send email'));
-        $show->field('send_text', __('Send text'));
+        $show->field('is_active', __('Is_Active'));
+        $show->field('send_email', __('Send_Email'));
+        $show->field('send_text', __('Send_Text'));
         $show->databasefk('Database_Name')->as(function ($content) {
             return $content->name;
         });
@@ -87,9 +91,9 @@ class CohortController extends AdminController
         $form->text('name', __('Name'))->rules('required');
         $form->textarea('description', __('Description'));
         $form->text('query', __('Query'))->rules('required');
-        $form->switch('is_active', __('Is active'))->default(1);
-        $form->switch('send_email', __('Send email'))->default(1);
-        $form->switch('send_text', __('Send text'))->default(1);
+        $form->switch('is_active', __('Is_Active'))->default(1);
+        $form->switch('send_email', __('Send_Email'))->default(1);
+        $form->switch('send_text', __('Send_Text'))->default(1);
         $databases = \App\Models\Database::pluck('name', 'id')->toArray();
         $form->select('database_id', __('Database_Name'))->options($databases)->rules('required');
         $form->text('cb', __('Cb'))->readonly()->value(auth()->user()->name);

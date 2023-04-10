@@ -32,6 +32,10 @@ class DatabaseController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
 
+        $grid->filter(function ($filter) {
+            $filter->like('name', __('Database_Name'));
+        });
+
         return $grid;
     }
 

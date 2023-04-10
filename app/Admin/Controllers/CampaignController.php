@@ -31,13 +31,22 @@ class CampaignController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('campaign_name', __('Campaign_Name'));
-        $grid->column('campaign_date', __('Campaign_Date'));
+        $grid->column('campaign_date', __('Campaign_Date_Time'));
         $grid->cohortfk()->name('Cohort_Name');
         $grid->column('email_body', __('Email_Body'));
         $grid->column('text_body', __('Text_Tody'));
         $grid->column('cd', __('Cd'));
 
+
         $grid->model()->orderBy('id', 'desc');
+
+        $grid->filter(function ($filter) {
+            $filter->like('campaign_name', __('Campaign_Name'));
+        });
+
+        $grid->filter(function ($filter) {
+            $filter->like('campaign_date', __('Campaign_Date_Time'));
+        });
 
 
         return $grid;
@@ -54,14 +63,14 @@ class CampaignController extends AdminController
         $show = new Show(Campaign::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('campaign_id', __('Campaign id'));
-        $show->field('campaign_name', __('Campaign name'));
-        $show->field('campaign_date', __('Campaign date'));
+        $show->field('campaign_id', __('Campaign_Id'));
+        $show->field('campaign_name', __('Campaign_Name'));
+        $show->field('campaign_date', __('Campaign_Date_Time'));
         $show->cohortfk('Cohort_Name')->as(function ($content) {
             return $content->name;
         });
-        $show->field('email_body', __('Email body'));
-        $show->field('text_body', __('Text body'));
+        $show->field('email_body', __('Email_Body'));
+        $show->field('text_body', __('Text_Body'));
         $show->field('cb', __('Cb'));
         $show->field('cd', __('Cd'));
         $show->field('ub', __('Ub'));
@@ -80,9 +89,9 @@ class CampaignController extends AdminController
         $form = new Form(new Campaign());
 
         $campaignId = Str::uuid();
-        $form->text('campaign_id', __('Campaign id'))->readonly()->default($campaignId);
-        $form->text('campaign_name', __('Campaign name'))->rules('required');
-        $form->datetime('campaign_date', __('Campaign date'))->default(date('Y-m-d H:i:s'))->rules('required');
+        $form->text('campaign_id', __('Campaign_Id'))->readonly()->default($campaignId);
+        $form->text('campaign_name', __('Campaign_Name'))->rules('required');
+        $form->datetime('campaign_date', __('Campaign_Date_Time'))->default(date('Y-m-d H:i:s'))->rules('required');
         $cohorts = \App\Models\Cohort::where('is_active', true)->get();
         $options = [];
         $sendEmailfalg=[];
@@ -100,11 +109,11 @@ class CampaignController extends AdminController
         $form->select('cohort_id', __('Cohort_Name'))->options($options)
         ->when('in', $sendEmailfalg, function (Form $form) {
         
-                $form->textarea('email_body', __('Email body'))->rules('required');
+                $form->textarea('email_body', __('Email_Body'))->rules('required');
             
             })->when('in', $sendTextfalg, function (Form $form) {
         
-                $form->textarea('text_body', __('Text body'))->rules('required');
+                $form->textarea('text_body', __('Text_Body'))->rules('required');
             
             })->rules('required');
         
