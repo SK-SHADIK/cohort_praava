@@ -89,7 +89,9 @@ class CampaignController extends AdminController
         $campaignId = Str::uuid();
         $form->text('campaign_id', __('Campaign_Id'))->readonly()->default($campaignId);
         $form->text('campaign_name', __('Campaign_Name'))->rules('required');
-        $form->datetime('campaign_date', __('Campaign_Date_Time'))->default(date('Y-m-d H:i:s'))->rules('required');
+        $form->datetime('campaign_date', __('Campaign_Date_Time'))->default(date('Y-m-d h:i A'))
+     ->format('YYYY-MM-DD hh:mm A')
+     ->rules('required');
         $cohorts = \App\Models\Cohort::where('is_active', true)->get();
         $options = [];
         $sendEmailflag = [];
@@ -113,7 +115,7 @@ class CampaignController extends AdminController
             $form->textarea('text_body', __('Text_Body'))->rules('required');
         
         })->rules('required');
-         
+
         $form->hidden('cb', __('Cb'))->value(auth()->user()->name);
         $form->hidden('ub', __('Ub'))->value(auth()->user()->name);
               
