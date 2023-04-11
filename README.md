@@ -1,4 +1,4 @@
-<h1 style="background:#810054; text-align:center; font-size:40px; font-weight:500;">Campaign System Praava Health</h1>
+<h1 style="background:#810054; text-align:center; font-size:40px; font-weight:500;">Cohort System Praava Health</h1>
 
 <h3 style="font-size:30px;">Requirements</h3>
 <ul>
