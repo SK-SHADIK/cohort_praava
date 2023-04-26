@@ -26,7 +26,7 @@ class CohortController extends AdminController
     {
         $grid = new Grid(new Cohort());
 
-        $grid->column('id', __('Id'));
+        $grid->column('id', __('Id'))->sortable();
         $grid->column('name', __('Name'));
         $grid->column('description', __('Description'));
         $grid->column('query', __('Query'));
@@ -40,7 +40,7 @@ class CohortController extends AdminController
             return $value ? '<span style="color: green; font-weight:900;">Active</span>' : '<span style="color: red; font-weight:900;">Not Active</span>';
         });
         $grid->databasefk()->name('Database_Name');
-        $grid->column('cd', __('Cd'));
+        $grid->column('cd', __('Cd'))->sortable();
 
         $grid->model()->orderBy('id', 'desc');
 

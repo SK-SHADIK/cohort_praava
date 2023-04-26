@@ -29,13 +29,13 @@ class CampaignController extends AdminController
     {
         $grid = new Grid(new Campaign());
 
-        $grid->column('id', __('Id'));
+        $grid->column('id', __('Id'))->sortable();
         $grid->column('campaign_name', __('Campaign_Name'));
-        $grid->column('campaign_date', __('Campaign_Date_Time'));
+        $grid->column('campaign_date', __('Campaign_Date_Time'))->sortable();
         $grid->cohortfk()->name('Cohort_Name');
         $grid->column('email_body', __('Email_Body'));
         $grid->column('text_body', __('Text_Tody'));
-        $grid->column('cd', __('Cd'));
+        $grid->column('cd', __('Cd'))->sortable();
 
         $grid->model()->orderBy('id', 'desc');
 

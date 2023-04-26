@@ -26,9 +26,9 @@ class DatabaseController extends AdminController
     {
         $grid = new Grid(new Database());
 
-        $grid->column('id', __('Id'));
+        $grid->column('id', __('Id'))->sortable();
         $grid->column('name', __('Name'));
-        $grid->column('cd', __('Cd'));
+        $grid->column('cd', __('Cd'))->sortable();
 
         $grid->model()->orderBy('id', 'desc');
 
