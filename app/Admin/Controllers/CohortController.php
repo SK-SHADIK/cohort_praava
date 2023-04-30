@@ -31,13 +31,16 @@ class CohortController extends AdminController
         $grid->column('description', __('Description'));
         $grid->column('query', __('Query'));
         $grid->column('is_active', __('Is_Active'))->display(function ($value) {
-            return $value ? '<span style="color: green; font-weight:900;">Active</span>' : '<span style="color: red; font-weight:900;">Not Active</span>';
+            return $value ? '<span style="color: green; font-weight:900; ">Active</span>' :
+            '<span style="color: red; font-weight:900; ">Not Active</span>';
         });
         $grid->column('send_email', __('Send_Email'))->display(function ($value) {
-            return $value ? '<span style="color: green; font-weight:900;">Active</span>' : '<span style="color: red; font-weight:900;">Not Active</span>';
+            return $value ? '<span style="color: green; font-weight:900;">Active</span>' :
+            '<span style="color: red; font-weight:900;">Not Active</span>';
         });
         $grid->column('send_text', __('Send_Text'))->display(function ($value) {
-            return $value ? '<span style="color: green; font-weight:900;">Active</span>' : '<span style="color: red; font-weight:900;">Not Active</span>';
+            return $value ? '<span style=" color: green; font-weight:900;">Active</span>' :
+            '<span style="color: red; font-weight:900;">Not Active</span>';
         });
         $grid->databasefk()->name('Database_Name');
         $grid->column('cd', __('Cd'))->sortable();
