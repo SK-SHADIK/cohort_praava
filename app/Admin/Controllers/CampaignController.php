@@ -10,7 +10,6 @@ use Encore\Admin\Show;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
-
 class CampaignController extends AdminController
 {
     /**
@@ -32,7 +31,7 @@ class CampaignController extends AdminController
         $grid->column('id', __('Id'))->sortable();
         $grid->column('campaign_name', __('Campaign_Name'));
         $grid->column('campaign_date', __('Campaign_Date_Time'))->sortable();
-        $grid->cohortfk()->name('Cohort_Name');
+        $grid->cohort()->name('Cohort_Name');
         $grid->column('email_body', __('Email_Body'));
         $grid->column('text_body', __('Text_Tody'));
         $grid->column('cd', __('Cd'))->sortable();
@@ -61,14 +60,14 @@ class CampaignController extends AdminController
         $show = new Show(Campaign::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('campaign_id', __('Campaign_Id'));
-        $show->field('campaign_name', __('Campaign_Name'));
-        $show->field('campaign_date', __('Campaign_Date_Time'));
-        $show->cohortfk('Cohort_Name')->as(function ($content) {
+        $show->field('campaign_id', __('Campaign id'));
+        $show->field('campaign_name', __('Campaign name'));
+        $show->field('campaign_date', __('Campaign date'));
+        $show->cohort('Cohort_Name')->as(function ($content) {
             return $content->name;
         });
-        $show->field('email_body', __('Email_Body'));
-        $show->field('text_body', __('Text_Body'));
+        $show->field('email_body', __('Email body'));
+        $show->field('text_body', __('Text body'));
         $show->field('cb', __('Cb'));
         $show->field('cd', __('Cd'));
         $show->field('ub', __('Ub'));
@@ -118,7 +117,7 @@ class CampaignController extends AdminController
 
         $form->hidden('cb', __('Cb'))->value(auth()->user()->name);
         $form->hidden('ub', __('Ub'))->value(auth()->user()->name);
-              
+
         return $form;
     }
 }

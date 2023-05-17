@@ -11,7 +11,7 @@ class Cohort extends Model
     const CREATED_AT = 'cd';
     const UPDATED_AT = 'ud';
 
-    public function databasefk()
+    public function database()
     {
         return $this->hasOne(Database::class, 'id', 'database_id');
     }

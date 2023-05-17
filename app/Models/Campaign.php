@@ -11,7 +11,7 @@ class Campaign extends Model
     const CREATED_AT = 'cd';
     const UPDATED_AT = 'ud';
 
-    public function cohortfk()
+    public function cohort()
     {
         return $this->hasOne(Cohort::class, 'id', 'cohort_id');
     }

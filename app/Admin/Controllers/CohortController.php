@@ -42,7 +42,7 @@ class CohortController extends AdminController
             return $value ? '<span style=" color: green; font-weight:900;">Active</span>' :
             '<span style="color: red; font-weight:900;">Not Active</span>';
         });
-        $grid->databasefk()->name('Database_Name');
+        $grid->database()->name('Database_Name');
         $grid->column('cd', __('Cd'))->sortable();
 
         $grid->model()->orderBy('id', 'desc');
@@ -71,7 +71,7 @@ class CohortController extends AdminController
         $show->field('is_active', __('Is_Active'));
         $show->field('send_email', __('Send_Email'));
         $show->field('send_text', __('Send_Text'));
-        $show->databasefk('Database_Name')->as(function ($content) {
+        $show->database('Database_Name')->as(function ($content) {
             return $content->name;
         });
         $show->field('cb', __('Cb'));
