@@ -92,8 +92,9 @@ class CohortController extends AdminController
         $form = new Form(new Cohort());
 
         $form->text('name', __('Name'))->rules('required');
-        $form->textarea('description', __('Description'));
-        $form->text('query', __('Query'))->rules('required');
+        $form->textarea('description', __('Description'))->rules('required');
+        $form->html('<h4 class="alert alert-danger">Must be use <br> * Mobile Number = mobileno <br> * Email = email <br> * Patient Name = patientname</h4>');
+        $form->text('query', __('Query'));
         $form->switch('is_active', __('Is_Active'))->default(1);
         $form->switch('send_email', __('Send_Email'))->default(1);
         $form->switch('send_text', __('Send_Text'))->default(1);
