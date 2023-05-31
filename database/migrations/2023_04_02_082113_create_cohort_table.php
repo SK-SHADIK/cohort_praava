@@ -20,7 +20,7 @@ class CreateCohortTable extends Migration
             $table->text('query', 255)->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('send_email')->default(true);
-            $table->boolean('send_text')->default(true);
+            $table->boolean('send_sms')->default(true);
             $table->unsignedBigInteger('database_id');
             $table->string('cb', 255)->nullable();
             $table->timestamp('cd')->default(DB::raw('CURRENT_TIMESTAMP'));
