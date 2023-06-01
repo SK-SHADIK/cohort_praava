@@ -17,5 +17,7 @@ Route::group([
     Route::resource('database', DatabaseController::class);
     Route::resource('cohort', CohortController::class);
     Route::resource('event-based-campaign', EventBasedCampaignController::class);
+    Route::resource('one-time-campaign', OneTimeCampaignController::class);
+    Route::resource('campaign-patient-details', CampaignPatientDetailsController::class);
 
 });

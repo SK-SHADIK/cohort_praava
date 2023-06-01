@@ -16,7 +16,7 @@ class EventBasedCampaignController extends AdminController
      *
      * @var string
      */
-    protected $title = 'EventBasedCampaign';
+    protected $title = 'Event Based Campaign';
 
     /**
      * Make a grid builder.
