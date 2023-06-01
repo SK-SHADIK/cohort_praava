@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Campaign extends Model
+class EventBasedCampaign extends Model
 {
-    protected $table = "campaign";
+    protected $table = "event_based_campaign";
     const CREATED_AT = 'cd';
     const UPDATED_AT = 'ud';
 

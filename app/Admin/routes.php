@@ -16,6 +16,6 @@ Route::group([
 
     Route::resource('database', DatabaseController::class);
     Route::resource('cohort', CohortController::class);
-    Route::resource('campaign', CampaignController::class);
+    Route::resource('event-based-campaign', EventBasedCampaignController::class);
 
 });

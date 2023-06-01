@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCampaignTable extends Migration
+class CreateEventBasedCampaignTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCampaignTable extends Migration
      */
     public function up()
     {
-        Schema::create('campaign', function (Blueprint $table) {
+        Schema::create('event_based_campaign', function (Blueprint $table) {
             $table->id();
             $table->uuid('campaign_id')->default(Str::uuid());
             $table->string('campaign_name', 255);
@@ -38,6 +38,6 @@ class CreateCampaignTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('campaign');
+        Schema::dropIfExists('event_based_campaign');
     }
 }
