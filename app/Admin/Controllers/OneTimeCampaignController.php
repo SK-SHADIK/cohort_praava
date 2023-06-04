@@ -10,6 +10,11 @@ use Encore\Admin\Show;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\CampaignPatientDetails;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 
 class OneTimeCampaignController extends AdminController
 {
@@ -117,38 +122,46 @@ class OneTimeCampaignController extends AdminController
             $form->textarea('sms_body', __('SMS Body'))->rules('required');
         })->when(1, function ($form) {
             $form->hidden();
-        })->default(1);
-
-        $form->html('<h4 class="alert alert-danger">In CSV file must use the column name like <br> * Mobile Number = mobileno <br> * Email = email <br> * Patient Name = patientname</h4>');
-
-        $form->file('file_upload', __('Upload CSV File'));
-
-        $form->saving(function (Form $form) {
-            $file = $form->file('file_upload');
-        
-            $data = Excel::toArray([], $file);
-
-            foreach ($data[0] as $row) {
-                $patientDetails = new CampaignPatientDetails();
-        
-                $patientDetails->one_time_campaign_id = $form->input('id');
-        
-                $patientDetails->mobile_number = $row['mobileno'];
-                $patientDetails->email = $row['email'];
-                $patientDetails->patient_name = $row['patientname'];
-        
-                $patientDetails->save();
-            }
-        
-        });
-        $form->submitted(function (Form $form) {
-            $form->ignore('send_email');
-            $form->ignore('send_sms');
-            $form->ignore('file_upload');
-        });
+        })->default(1);        
         
         $form->hidden('cb', __('Cb'))->value(auth()->user()->name);
         $form->hidden('ub', __('Ub'))->value(auth()->user()->name);
+
+        $form->html('<h4 class="alert alert-danger">In CSV file must use the column name like <br> * Mobile Number = mobileno <br> * Email = email <br> * Patient Name = patientname</h4>'); 
+
+        $form->file('file_upload', __('Upload CSV File'));
+
+
+        $form->saving(function (Form $form) {
+            $form->ignore('send_email');
+            $form->ignore('send_sms');
+            $file = $form->file_upload;
+        
+            if ($file instanceof UploadedFile) {
+                $data = Excel::toArray([], $file);
+        
+                $campaign = OneTimeCampaign::create([
+                    // Set other campaign properties here
+                    
+                    'campaign_id' => $form->campaign_id,
+                    'campaign_name' => $form->campaign_name,
+                    'active_date_time' => $form->active_date_time,
+                    'status' => $form->status,
+                    'email_body' => $form->email_body,
+                    'sms_body' => $form->sms_body,
+                ]);
+        
+                foreach ($data[0] as $row) {
+                    $patientDetails = new CampaignPatientDetails();
+                    $patientDetails->one_time_campaign_id = $campaign->id;
+                    $patientDetails->mobileno = $row[0];
+                    $patientDetails->email = $row[1];
+                    $patientDetails->patientname = $row[2];
+                    $patientDetails->save();
+                }
+            }
+        });
+        
 
         return $form;
     }

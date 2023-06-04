@@ -7,6 +7,14 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+
 
 class CampaignPatientDetailsController extends AdminController
 {
@@ -26,15 +34,14 @@ class CampaignPatientDetailsController extends AdminController
     {
         $grid = new Grid(new CampaignPatientDetails());
 
-        $grid->column('id', __('Id'));
+        $grid->column('id', __('Id'))->sortable();
         $grid->column('one_time_campaign_id', __('One time campaign id'));
         $grid->column('email', __('Email'));
         $grid->column('mobileno', __('Mobileno'));
         $grid->column('patientname', __('Patientname'));
-        $grid->column('cb', __('Cb'));
-        $grid->column('cd', __('Cd'));
-        $grid->column('ub', __('Ub'));
-        $grid->column('ud', __('Ud'));
+        $grid->column('cd', __('Cd'))->sortable();
+
+        $grid->model()->orderBy('id', 'desc');
 
         return $grid;
     }
@@ -71,13 +78,12 @@ class CampaignPatientDetailsController extends AdminController
     {
         $form = new Form(new CampaignPatientDetails());
 
-        $form->number('one_time_campaign_id', __('One time campaign id'));
-        $form->email('email', __('Email'));
-        $form->text('mobileno', __('Mobileno'));
-        $form->text('patientname', __('Patientname'));
-        $form->text('cb', __('Cb'));
-        $form->text('ub', __('Ub'));
-
         return $form;
     }
+    // public function create(Content $content)
+    // {
+    //     return $content
+    //         ->title('Create')
+    //         ->view('fileUpload');
+    // }
 }

@@ -10,4 +10,14 @@ class OneTimeCampaign extends Model
     protected $table = "one_time_campaign";
     const CREATED_AT = 'cd';
     const UPDATED_AT = 'ud';
+
+    protected $fillable = [
+        'campaign_id',
+        'campaign_name',
+        'active_date_time',
+        'status',
+        'email_body',
+        'sms_body',
+    ];
+
 }
