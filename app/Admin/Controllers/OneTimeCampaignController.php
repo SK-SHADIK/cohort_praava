@@ -127,7 +127,7 @@ class OneTimeCampaignController extends AdminController
         $form->hidden('cb', __('Cb'))->value(auth()->user()->name);
         $form->hidden('ub', __('Ub'))->value(auth()->user()->name);
 
-        $form->html('<h4 class="alert alert-danger">In CSV file must use the column name like <br> * Mobile Number = mobileno <br> * Email = email <br> * Patient Name = patientname</h4>'); 
+        $form->html('<h4 class="alert alert-danger">The CSV file must use the column name like <br> * Mobile Number = mobileno <br> * Email = email <br> * Patient Name = patientname</h4>'); 
 
         $form->file('file_upload', __('Upload CSV File'));
 
@@ -140,9 +140,7 @@ class OneTimeCampaignController extends AdminController
             if ($file instanceof UploadedFile) {
                 $data = Excel::toArray([], $file);
         
-                $campaign = OneTimeCampaign::create([
-                    // Set other campaign properties here
-                    
+                $campaign = OneTimeCampaign::create([                    
                     'campaign_id' => $form->campaign_id,
                     'campaign_name' => $form->campaign_name,
                     'active_date_time' => $form->active_date_time,
@@ -154,14 +152,14 @@ class OneTimeCampaignController extends AdminController
                 foreach ($data[0] as $row) {
                     $patientDetails = new CampaignPatientDetails();
                     $patientDetails->one_time_campaign_id = $campaign->id;
-                    $patientDetails->mobileno = $row[0];
-                    $patientDetails->email = $row[1];
-                    $patientDetails->patientname = $row[2];
+                    $patientDetails->patientname = $row[0];
+                    $patientDetails->mobileno = $row[1];
+                    $patientDetails->email = $row[2];
                     $patientDetails->save();
                 }
             }
-        });
-        
+            return Redirect::to('/admin/one-time-campaign');
+        });        
 
         return $form;
     }
