@@ -35,13 +35,25 @@ class CampaignPatientDetailsController extends AdminController
         $grid = new Grid(new CampaignPatientDetails());
 
         $grid->column('id', __('Id'))->sortable();
-        $grid->column('one_time_campaign_id', __('One time campaign id'));
+        $grid->column('one_time_campaign_id', __('One time campaign id'))->sortable();
+        $grid->capmaign()->campaign_name('One Time Campaign Name');
         $grid->column('email', __('Email'));
         $grid->column('mobileno', __('Mobileno'));
         $grid->column('patientname', __('Patientname'));
         $grid->column('cd', __('Cd'))->sortable();
 
         $grid->model()->orderBy('id', 'desc');
+
+        $grid->quickSearch(function ($model, $query) {
+            $model->orWhereHas('capmaign', function (Builder $queryr) use ($query) {
+                $queryr->where('id', 'like', "%{$query}%");
+            });
+            $model->orWhereHas('capmaign', function (Builder $queryr) use ($query) {
+                $queryr->where('campaign_name', 'like', "%{$query}%");
+            });
+        })->placeholder('Search Here Campaign id Or Name...');
+
+        $grid->disableFilter();
 
         return $grid;
     }
@@ -77,13 +89,14 @@ class CampaignPatientDetailsController extends AdminController
     protected function form()
     {
         $form = new Form(new CampaignPatientDetails());
+            if ($this->isCreating()) {
+                $form->disableCreation(); // Disable create function
+            }
+        
+            if ($this->isEditing()) {
+                $form->disableEditing(); // Disable edit function
+            }
 
         return $form;
     }
-    // public function create(Content $content)
-    // {
-    //     return $content
-    //         ->title('Create')
-    //         ->view('fileUpload');
-    // }
 }

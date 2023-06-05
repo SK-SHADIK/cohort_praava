@@ -48,11 +48,11 @@ class OneTimeCampaignController extends AdminController
         $grid->model()->orderBy('id', 'desc');
 
         $grid->filter(function ($filter) {
-            $filter->like('campaign_name', __('Campaign_Name'));
+            $filter->like('campaign_name', __('Campaign Name'));
         });
 
         $grid->filter(function ($filter) {
-            $filter->like('campaign_date', __('Campaign_Date_Time'));
+            $filter->like('active_date_time', __('Active Date Time'));
         });
 
         return $grid;
@@ -127,10 +127,9 @@ class OneTimeCampaignController extends AdminController
         $form->hidden('cb', __('Cb'))->value(auth()->user()->name);
         $form->hidden('ub', __('Ub'))->value(auth()->user()->name);
 
-        $form->html('<h4 class="alert alert-danger">The CSV file must use the column name like <br> * Mobile Number = mobileno <br> * Email = email <br> * Patient Name = patientname</h4>'); 
+        $form->html('<h4 class="alert alert-danger">The Excle file must be use 3 column <br> First column must be the <strong>Patient Name</strong><br>Second column must be the <strong>Mobile Number</strong><br>Third column must be the <strong>Email</strong><br>Must use the title in first row in your excle file</h4>'); 
 
         $form->file('file_upload', __('Upload CSV File'));
-
 
         $form->saving(function (Form $form) {
             $form->ignore('send_email');
@@ -149,14 +148,26 @@ class OneTimeCampaignController extends AdminController
                     'sms_body' => $form->sms_body,
                 ]);
         
+                $isFirstRow = true; 
                 foreach ($data[0] as $row) {
+                    if ($isFirstRow) {
+                        $isFirstRow = false;
+                        continue;
+                    }
+                
                     $patientDetails = new CampaignPatientDetails();
                     $patientDetails->one_time_campaign_id = $campaign->id;
+                    
+                    if ($row[0] == null || $row[1] == null || $row[2] == null) {
+                        $form->html('<h4 class="alert alert-danger">Please Make A Valid Input In CSV');     
+                    }
+                    
                     $patientDetails->patientname = $row[0];
                     $patientDetails->mobileno = $row[1];
                     $patientDetails->email = $row[2];
                     $patientDetails->save();
                 }
+
             }
             return Redirect::to('/admin/one-time-campaign');
         });        
