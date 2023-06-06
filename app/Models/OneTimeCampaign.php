@@ -16,8 +16,12 @@ class OneTimeCampaign extends Model
         'campaign_name',
         'active_date_time',
         'status',
+        'send_email',
         'email_body',
+        'send_sms',
         'sms_body',
+        'is_send',
+        'file_upload',
     ];
 
 }

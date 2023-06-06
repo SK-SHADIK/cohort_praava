@@ -33,6 +33,10 @@ class EventBasedCampaignController extends AdminController
         $grid->cohort()->name('Cohort Name');
         $grid->column('email_body', __('Email Body'));
         $grid->column('sms_body', __('SMS Body'));
+        $grid->column('is_send', __('Is Send'))->display(function ($value) {
+            return $value ? '<span style=" color: green; font-weight:900;">Sended</span>' :
+            '<span style="color: red; font-weight:900;">Not Send</span>';
+        });
         $grid->column('cd', __('Cd'))->sortable();
 
         $grid->model()->orderBy('id', 'desc');

@@ -35,7 +35,7 @@ class CampaignPatientDetailsController extends AdminController
         $grid = new Grid(new CampaignPatientDetails());
 
         $grid->column('id', __('Id'))->sortable();
-        $grid->column('one_time_campaign_id', __('One time campaign id'))->sortable();
+        $grid->capmaign()->campaign_id('One Time Campaign Id')->sortable();
         $grid->capmaign()->campaign_name('One Time Campaign Name');
         $grid->column('email', __('Email'));
         $grid->column('mobileno', __('Mobileno'));
@@ -46,7 +46,7 @@ class CampaignPatientDetailsController extends AdminController
 
         $grid->quickSearch(function ($model, $query) {
             $model->orWhereHas('capmaign', function (Builder $queryr) use ($query) {
-                $queryr->where('id', 'like', "%{$query}%");
+                $queryr->where('campaign_id', 'like', "%{$query}%");
             });
             $model->orWhereHas('capmaign', function (Builder $queryr) use ($query) {
                 $queryr->where('campaign_name', 'like', "%{$query}%");

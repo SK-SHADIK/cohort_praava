@@ -11,6 +11,10 @@ class EventBasedCampaign extends Model
     const CREATED_AT = 'cd';
     const UPDATED_AT = 'ud';
 
+    protected $fillable = [
+        'is_send',
+    ];
+
     public function cohort()
     {
         return $this->hasOne(Cohort::class, 'id', 'cohort_id');

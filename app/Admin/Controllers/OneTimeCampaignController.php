@@ -23,7 +23,7 @@ class OneTimeCampaignController extends AdminController
      *
      * @var string
      */
-    protected $title = 'One Time Campaign';
+    protected $title = 'OneTimeCampaign';
 
     /**
      * Make a grid builder.
@@ -35,17 +35,34 @@ class OneTimeCampaignController extends AdminController
         $grid = new Grid(new OneTimeCampaign());
 
         $grid->column('id', __('Id'))->sortable();
+        $grid->column('campaign_id', __('Campaign Id'));
         $grid->column('campaign_name', __('Campaign name'));
         $grid->column('active_date_time', __('Active date time'))->sortable();
         $grid->column('status', __('Status'))->display(function ($value) {
             return $value ? '<span style="color: green; font-weight:900; ">Active</span>' :
             '<span style="color: red; font-weight:900; ">Not Active</span>';
         });
+        $grid->column('send_email', __('Send Email'))->display(function ($value) {
+            return $value ? '<span style="color: green; font-weight:900;">Active</span>' :
+            '<span style="color: red; font-weight:900;">Not Active</span>';
+        });
         $grid->column('email_body', __('Email body'));
+        $grid->column('send_sms', __('Send SMS'))->display(function ($value) {
+            return $value ? '<span style=" color: green; font-weight:900;">Active</span>' :
+            '<span style="color: red; font-weight:900;">Not Active</span>';
+        });
         $grid->column('sms_body', __('Sms body'));
+        $grid->column('is_send', __('Is Send'))->display(function ($value) {
+            return $value ? '<span style=" color: green; font-weight:900;">Sended</span>' :
+            '<span style="color: red; font-weight:900;">Not Send</span>';
+        });
         $grid->column('cd', __('Cd'))->sortable();
 
         $grid->model()->orderBy('id', 'desc');
+
+        $grid->filter(function ($filter) {
+            $filter->like('campaign_id', __('Campaign Id'));
+        });
 
         $grid->filter(function ($filter) {
             $filter->like('campaign_name', __('Campaign Name'));
@@ -73,8 +90,11 @@ class OneTimeCampaignController extends AdminController
         $show->field('campaign_name', __('Campaign name'));
         $show->field('active_date_time', __('Active date time'));
         $show->field('status', __('Status'));
+        $show->field('send_email', __('Send email'));
         $show->field('email_body', __('Email body'));
+        $show->field('send_sms', __('Send sms'));
         $show->field('sms_body', __('Sms body'));
+        $show->field('is_send', __('Is send'));
         $show->field('cb', __('Cb'));
         $show->field('cd', __('Cd'));
         $show->field('ub', __('Ub'));
@@ -102,41 +122,47 @@ class OneTimeCampaignController extends AdminController
 
         $form->html('<br>');
 
-        $form->radio('send_email','Send Email')
+        $form->radio('send_email', 'Send Email')
         ->options([
-            1 =>'Yes',
-            2 =>'No',
-        ])->when(1, function ($form) {
+            true => 'Yes',
+            false => 'No',
+        ])->when(true, function ($form) {
             $form->textarea('email_body', __('Email Body'))->rules('required');
-        })->when(1, function ($form) {
-            $form->hidden();
-        })->default(1);
+        })->when(false, function ($form) {
+            $form->hidden('email_body');
+        })->default(true);
 
         $form->html('<br>');
 
-        $form->radio('send_sms','Send SMS')
+
+        $form->radio('send_sms', 'Send SMS')
         ->options([
-            1 =>'Yes',
-            2 =>'No',
-        ])->when(1, function ($form) {
+            true => 'Yes',
+            false => 'No',
+        ])->when(true, function ($form) {
             $form->textarea('sms_body', __('SMS Body'))->rules('required');
-        })->when(1, function ($form) {
-            $form->hidden();
-        })->default(1);        
+        })->when(false, function ($form) {
+            $form->hidden('send_sms');
+        })->default(true);
+
+        $form->hidden('is_send', __('Is Send'))->default(0);
+   
         
         $form->hidden('cb', __('Cb'))->value(auth()->user()->name);
         $form->hidden('ub', __('Ub'))->value(auth()->user()->name);
 
         $form->html('<h4 class="alert alert-danger">The Excle file must be use 3 column <br> First column must be the <strong>Patient Name</strong><br>Second column must be the <strong>Mobile Number</strong><br>Third column must be the <strong>Email</strong><br>Must use the title in first row in your excle file</h4>'); 
 
-        $form->file('file_upload', __('Upload CSV File'));
+        $form->file('file_upload', __('Upload CSV File'))->rules('required');
 
         $form->saving(function (Form $form) {
-            $form->ignore('send_email');
-            $form->ignore('send_sms');
             $file = $form->file_upload;
         
             if ($file instanceof UploadedFile) {
+                $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('upload', $fileName, 'local');
+                $form->file_upload = $filePath;
+
                 $data = Excel::toArray([], $file);
         
                 $campaign = OneTimeCampaign::create([                    
@@ -144,8 +170,12 @@ class OneTimeCampaignController extends AdminController
                     'campaign_name' => $form->campaign_name,
                     'active_date_time' => $form->active_date_time,
                     'status' => $form->status,
+                    'send_email' => $form->send_email,
                     'email_body' => $form->email_body,
                     'sms_body' => $form->sms_body,
+                    'send_sms' => $form->send_sms,
+                    'is_send' => $form->is_send,
+                    'file_upload' => $form->file_upload,
                 ]);
         
                 $isFirstRow = true; 
@@ -170,7 +200,7 @@ class OneTimeCampaignController extends AdminController
 
             }
             return Redirect::to('/admin/one-time-campaign');
-        });        
+        });  
 
         return $form;
     }

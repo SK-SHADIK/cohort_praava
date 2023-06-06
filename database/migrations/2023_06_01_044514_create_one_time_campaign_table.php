@@ -19,8 +19,12 @@ class CreateOneTimeCampaignTable extends Migration
             $table->string('campaign_name', 255);
             $table->timestamp('active_date_time');
             $table->boolean('status')->default(false);
+            $table->boolean('send_email')->default(true);
             $table->text('email_body')->nullable();
+            $table->boolean('send_sms')->default(true);
             $table->text('sms_body')->nullable();
+            $table->text('file_upload')->nullable();
+            $table->boolean('is_send')->default(false);
             $table->string('cb', 255)->nullable();
             $table->timestamp('cd')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('ub', 255)->nullable();
