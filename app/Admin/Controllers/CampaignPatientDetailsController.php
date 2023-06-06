@@ -89,13 +89,6 @@ class CampaignPatientDetailsController extends AdminController
     protected function form()
     {
         $form = new Form(new CampaignPatientDetails());
-            if ($this->isCreating()) {
-                $form->disableCreation(); // Disable create function
-            }
-        
-            if ($this->isEditing()) {
-                $form->disableEditing(); // Disable edit function
-            }
 
         return $form;
     }

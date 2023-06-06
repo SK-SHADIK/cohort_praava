@@ -28,8 +28,8 @@ class EventBasedCampaignController extends AdminController
         $grid = new Grid(new EventBasedCampaign());
 
         $grid->column('id', __('Id'))->sortable();
-        $grid->column('campaign_name', __('Campaign_Name'));
-        $grid->column('campaign_date', __('Campaign_Date_Time'))->sortable();
+        $grid->column('campaign_name', __('Campaign Name'));
+        $grid->column('campaign_date', __('Campaign Date Time'))->sortable();
         $grid->cohort()->name('Cohort Name');
         $grid->column('email_body', __('Email Body'));
         $grid->column('sms_body', __('SMS Body'));
@@ -38,11 +38,11 @@ class EventBasedCampaignController extends AdminController
         $grid->model()->orderBy('id', 'desc');
 
         $grid->filter(function ($filter) {
-            $filter->like('campaign_name', __('Campaign_Name'));
+            $filter->like('campaign_name', __('Campaign Name'));
         });
 
         $grid->filter(function ($filter) {
-            $filter->like('campaign_date', __('Campaign_Date_Time'));
+            $filter->like('campaign_date', __('Campaign Date Time'));
         });
 
         return $grid;
