@@ -7,14 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-use Illuminate\Support\Str;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\UploadedFile;
-
 
 class CampaignPatientDetailsController extends AdminController
 {

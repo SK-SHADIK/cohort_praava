@@ -11,8 +11,6 @@ use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\CampaignPatientDetails;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 
@@ -23,7 +21,7 @@ class OneTimeCampaignController extends AdminController
      *
      * @var string
      */
-    protected $title = 'OneTimeCampaign';
+    protected $title = 'One Time Campaign';
 
     /**
      * Make a grid builder.
@@ -112,28 +110,23 @@ class OneTimeCampaignController extends AdminController
         $campaignId = Str::uuid();
         $form->text('campaign_id', __('Campaign Id'))->readonly()->default($campaignId);
         $form->text('campaign_name', __('Campaign Name'))->rules('required');
-        $form->datetime('active_date_time', __('Active date time'))->default(date('Y-m-d h:i A'))
-     ->format('YYYY-MM-DD hh:mm A')
-     ->rules('required');
-        $form->switch('status', __('Status'))->default(0);
+        $form->datetime('active_date_time', __('Active date time'))->default(date('Y-m-d h:i A'))->format('YYYY-MM-DD hh:mm A')->rules('required');
 
+        $form->switch('status', __('Status'))->default(0);
         $form->html('<br>');
 
-        $form->radio('send_email', 'Send Email')
-        ->options([
+        $form->radio('send_email', 'Send Email')->options([
             true => 'Yes',
             false => 'No',
         ])->when(true, function ($form) {
-            $form->textarea('email_body', __('Email Body'))->rules('required');
+            $form->textarea('email_body', __('Email Body'))->rules('required');    
         })->when(false, function ($form) {
             $form->hidden('email_body');
         })->default(true);
 
         $form->html('<br>');
 
-
-        $form->radio('send_sms', 'Send SMS')
-        ->options([
+        $form->radio('send_sms', 'Send SMS')->options([
             true => 'Yes',
             false => 'No',
         ])->when(true, function ($form) {
@@ -169,6 +162,8 @@ class OneTimeCampaignController extends AdminController
                     'sms_body' => $form->sms_body,
                     'send_sms' => $form->send_sms,
                     'file_upload' => $path, 
+                    'cb' => $form->cb,
+                    'ub' => $form->ub,
                 ]);
         
                 $isFirstRow = true;
@@ -188,6 +183,8 @@ class OneTimeCampaignController extends AdminController
                     $patientDetails->patientname = $row[0];
                     $patientDetails->mobileno = $row[1];
                     $patientDetails->email = $row[2];
+                    $patientDetails->cb = $form->cb;
+                    $patientDetails->ub = $form->ub;
                     $patientDetails->save();
                 }
             }
@@ -195,7 +192,6 @@ class OneTimeCampaignController extends AdminController
             return Redirect::to('/admin/one-time-campaign');
         });
         
-
         return $form;
     }
 }

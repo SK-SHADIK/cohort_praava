@@ -21,6 +21,8 @@ class OneTimeCampaign extends Model
         'send_sms',
         'sms_body',
         'file_upload',
+        'cb',
+        'ub',
     ];
 
 }
