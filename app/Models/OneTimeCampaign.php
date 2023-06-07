@@ -20,7 +20,6 @@ class OneTimeCampaign extends Model
         'email_body',
         'send_sms',
         'sms_body',
-        'is_send',
         'file_upload',
     ];
 

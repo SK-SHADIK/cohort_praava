@@ -52,10 +52,7 @@ class OneTimeCampaignController extends AdminController
             '<span style="color: red; font-weight:900;">Not Active</span>';
         });
         $grid->column('sms_body', __('Sms body'));
-        $grid->column('is_send', __('Is Send'))->display(function ($value) {
-            return $value ? '<span style=" color: green; font-weight:900;">Sended</span>' :
-            '<span style="color: red; font-weight:900;">Not Send</span>';
-        });
+        $grid->column('file_upload', __('File Path'));
         $grid->column('cd', __('Cd'))->sortable();
 
         $grid->model()->orderBy('id', 'desc');
@@ -145,27 +142,24 @@ class OneTimeCampaignController extends AdminController
             $form->hidden('send_sms');
         })->default(true);
 
-        $form->hidden('is_send', __('Is Send'))->default(0);
-   
-        
         $form->hidden('cb', __('Cb'))->value(auth()->user()->name);
         $form->hidden('ub', __('Ub'))->value(auth()->user()->name);
 
-        $form->html('<h4 class="alert alert-danger">The Excle file must be use 3 column <br> First column must be the <strong>Patient Name</strong><br>Second column must be the <strong>Mobile Number</strong><br>Third column must be the <strong>Email</strong><br>Must use the title in first row in your excle file</h4>'); 
+        $form->html('<h4 class="alert alert-danger">The Excle file must be use 3 column <br> First column must be the <strong>PatientName</strong><br>Second column must be the <strong>MobileNumber</strong> Also must use <strong>country code</strong><br>Third column must be the <strong>Email</strong><br>Must use the title in first row in your excle file<br> You can use this template: <a href="https://docs.google.com/spreadsheets/d/1sOQX8gTSJ85gC_btBRXB5PNfJOenY2bSTESsDunl63g/edit?usp=sharing" target="_blank">https://docs.google.com/spreadsheets/d/1sOQX8gTSJ85gC_btBRXB5PNfJOenY2bSTESsDunl63g/edit?usp=sharing<a></h4>'); 
 
-        $form->file('file_upload', __('Upload CSV File'))->rules('required');
+        $form->file('file_upload', __('Upload CSV File'))->rules('required')->move('excleFiles');
 
         $form->saving(function (Form $form) {
             $file = $form->file_upload;
         
             if ($file instanceof UploadedFile) {
-                $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('upload', $fileName, 'local');
-                $form->file_upload = $filePath;
+                $filename = time() . '_' . $file->getClientOriginalName();
+                Storage::disk('local')->put($filename, file_get_contents($file));
+                $path = $file->storeAs('excleFiles', $filename, 'public');
 
                 $data = Excel::toArray([], $file);
         
-                $campaign = OneTimeCampaign::create([                    
+                $campaign = OneTimeCampaign::create([
                     'campaign_id' => $form->campaign_id,
                     'campaign_name' => $form->campaign_name,
                     'active_date_time' => $form->active_date_time,
@@ -174,33 +168,33 @@ class OneTimeCampaignController extends AdminController
                     'email_body' => $form->email_body,
                     'sms_body' => $form->sms_body,
                     'send_sms' => $form->send_sms,
-                    'is_send' => $form->is_send,
-                    'file_upload' => $form->file_upload,
+                    'file_upload' => $path, 
                 ]);
         
-                $isFirstRow = true; 
+                $isFirstRow = true;
                 foreach ($data[0] as $row) {
                     if ($isFirstRow) {
                         $isFirstRow = false;
                         continue;
                     }
-                
+        
                     $patientDetails = new CampaignPatientDetails();
                     $patientDetails->one_time_campaign_id = $campaign->id;
-                    
+        
                     if ($row[0] == null || $row[1] == null || $row[2] == null) {
-                        $form->html('<h4 class="alert alert-danger">Please Make A Valid Input In CSV');     
+                        $form->html('<h4 class="alert alert-danger">Please Make A Valid Input In CSV');
                     }
-                    
+        
                     $patientDetails->patientname = $row[0];
                     $patientDetails->mobileno = $row[1];
                     $patientDetails->email = $row[2];
                     $patientDetails->save();
                 }
-
             }
+            
             return Redirect::to('/admin/one-time-campaign');
-        });  
+        });
+        
 
         return $form;
     }

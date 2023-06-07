@@ -19,6 +19,7 @@ class CreateCampaignPatientDetailsTable extends Migration
             $table->string('email', 255)->nullable();
             $table->string('mobileno', 255)->nullable();
             $table->string('patientname', 255)->nullable();
+            $table->boolean('is_send')->default(false);
             $table->string('cb', 255)->nullable();
             $table->timestamp('cd')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('ub', 255)->nullable();

@@ -40,6 +40,10 @@ class CampaignPatientDetailsController extends AdminController
         $grid->column('email', __('Email'));
         $grid->column('mobileno', __('Mobileno'));
         $grid->column('patientname', __('Patientname'));
+        $grid->column('is_send', __('Is Send'))->display(function ($value) {
+            return $value ? '<span style=" color: green; font-weight:900;">Sended</span>' :
+            '<span style="color: red; font-weight:900;">Not Send</span>';
+        });
         $grid->column('cd', __('Cd'))->sortable();
 
         $grid->model()->orderBy('id', 'desc');
